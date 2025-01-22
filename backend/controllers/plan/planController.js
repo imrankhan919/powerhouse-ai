@@ -3,9 +3,9 @@ const Plan = require("../../models/plan/planModel");
 const User = require("../../models/users/userModel");
 
 const addPlan = expressAsyncHandler(async (req, res) => {
-  const { height, weight, goal, isVeg } = req.body;
+  const { height, weight, goal, prefrence } = req.body;
 
-  if (!height || !weight || !goal || !isVeg) {
+  if (!height || !weight || !goal || !prefrence) {
     res.status(400);
     throw new Error("Please Fill All Details!!");
   }
@@ -15,7 +15,7 @@ const addPlan = expressAsyncHandler(async (req, res) => {
     height,
     weight,
     goal,
-    isVeg,
+    prefrence,
   });
 
   if (plan) {

@@ -20,8 +20,9 @@ const planSchema = new mongoose.Schema(
       enums: ["gain", "loose", "maintain"],
       required: true,
     },
-    isVeg: {
-      type: Boolean,
+    prefrence: {
+      type: "String",
+      enums: ["vegiterian", "non-vegiterian", "vegan"],
       required: true,
     },
     isCompleted: {

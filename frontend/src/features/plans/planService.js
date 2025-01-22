@@ -13,6 +13,17 @@ const fetchPlans = async (uid, token) => {
   return response.data;
 };
 
-const planService = { fetchPlans };
+const addPlan = async (formData, token) => {
+  const options = {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.post(API_URL, formData, options);
+  return response.data;
+};
+
+const planService = { fetchPlans, addPlan };
 
 export default planService;
