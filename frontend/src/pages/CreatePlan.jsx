@@ -80,8 +80,8 @@ const CreatePlan = () => {
           >
             <option value="#">Select Your Goal</option>
             <option value="weight_gain">Weight Gain</option>
-            <option value="weight_gain">Loose Weight</option>
-            <option value="weight_gain">Maintain Weight</option>
+            <option value="weight_lose">Loose Weight</option>
+            <option value="weight_maintain">Maintain Weight</option>
           </select>
           <select
             className="border p-1 my-2 w-full"

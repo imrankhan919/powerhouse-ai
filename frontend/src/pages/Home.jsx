@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
+import { reset } from "../features/plans/planSlice";
 
 const Home = () => {
   const { user, isSuccess, isLoading, isError, message } = useSelector(
@@ -9,6 +10,7 @@ const Home = () => {
   );
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!user) {
@@ -20,6 +22,8 @@ const Home = () => {
     if (isError && message) {
       toast.error(message);
     }
+
+    dispatch(reset());
   }, [user, message, isError]);
 
   if (isLoading) {

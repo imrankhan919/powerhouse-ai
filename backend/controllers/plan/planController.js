@@ -56,7 +56,7 @@ const getPlans = expressAsyncHandler(async (req, res) => {
     throw new Error("Not Same User");
   }
 
-  const plans = await Plan.find();
+  const plans = await Plan.find({ user: user._id });
   if (plans) {
     res.status(201).json(plans);
   } else {
@@ -65,4 +65,14 @@ const getPlans = expressAsyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { addPlan, updatePlan, getPlans };
+const getPlan = expressAsyncHandler(async (req, res) => {
+  const plan = await Plan.findById(req.params.pid);
+  if (plan) {
+    res.status(201).json(plan);
+  } else {
+    res.status(404);
+    throw new Error("No Plans Found!!");
+  }
+});
+
+module.exports = { addPlan, updatePlan, getPlans, getPlan };

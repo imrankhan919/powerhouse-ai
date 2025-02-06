@@ -11,7 +11,18 @@ const planSlice = createSlice({
     isError: false,
     message: "",
   },
-  reducers: {},
+  reducers: {
+    reset: (state, action) => {
+      return {
+        plans: [],
+        plan: {},
+        isLoading: false,
+        isSuccess: false,
+        isError: false,
+        message: "",
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getPlans.pending, (state, action) => {
@@ -26,6 +37,23 @@ const planSlice = createSlice({
         state.isError = false;
       })
       .addCase(getPlans.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getPlan.pending, (state, action) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.isError = false;
+      })
+      .addCase(getPlan.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.plan = action.payload;
+        state.isError = false;
+      })
+      .addCase(getPlan.rejected, (state, action) => {
         state.isLoading = false;
         state.isSuccess = false;
         state.isError = true;
@@ -51,11 +79,12 @@ const planSlice = createSlice({
   },
 });
 
+export const { reset } = planSlice.actions;
 export default planSlice.reducer;
 
-// Get Plan
+// Get Plans
 export const getPlans = createAsyncThunk(
-  "FETCH/PLAN",
+  "FETCH/PLANS",
   async (uid, thunkAPI) => {
     let token = thunkAPI.getState().auth.user.token;
     try {
@@ -68,6 +97,17 @@ export const getPlans = createAsyncThunk(
 );
 
 // Get Plan
+export const getPlan = createAsyncThunk("FETCH/PLAN", async (pid, thunkAPI) => {
+  let token = thunkAPI.getState().auth.user.token;
+  try {
+    return await planService.fetchPlan(pid, token);
+  } catch (error) {
+    const message = error.response.data.message;
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+// Add Plan
 export const createPlan = createAsyncThunk(
   "ADD/PLAN",
   async (formData, thunkAPI) => {
