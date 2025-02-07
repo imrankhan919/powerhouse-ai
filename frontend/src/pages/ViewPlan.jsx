@@ -3,20 +3,31 @@ import BackButton from "../components/BackButton";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../components/Loading";
 import { toast } from "react-toastify";
-import { getPlan } from "../features/plans/planSlice";
+import { generatePlan, getPlan } from "../features/plans/planSlice";
 import { useParams } from "react-router-dom";
 
 const ViewPlan = () => {
   const { user } = useSelector((state) => state.auth);
-  const { plan, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.plan
-  );
+  const { plan, generatedPlan, isLoading, isError, isSuccess, message } =
+    useSelector((state) => state.plan);
+
+  const userData = {
+    name: user.name,
+    goal: plan.goal,
+    height: plan.height,
+    weight: plan.weight,
+    prefrence: plan.prefrence,
+  };
 
   const { pid } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getPlan(pid));
+
+    if (plan && user && isSuccess) {
+      dispatch(generatePlan(userData));
+    }
   }, [pid]);
 
   if (isLoading) {
@@ -48,21 +59,7 @@ const ViewPlan = () => {
       </div>
 
       <div className="border p-5 my-2">
-        <p className="text-sm">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-          Necessitatibus, qui nostrum. Odio debitis dignissimos mollitia
-          provident, accusantium eveniet dolor magnam reprehenderit veritatis
-          rerum. Nulla dolores laborum provident? Incidunt, accusantium
-          expedita? Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-          Necessitatibus, qui nostrum. Odio debitis dignissimos mollitia
-          provident, accusantium eveniet dolor magnam reprehenderit veritatis
-          rerum. Nulla dolores laborum provident? Incidunt, accusantium
-          expedita? Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-          Necessitatibus, qui nostrum. Odio debitis dignissimos mollitia
-          provident, accusantium eveniet dolor magnam reprehenderit veritatis
-          rerum. Nulla dolores laborum provident? Incidunt, accusantium
-          expedita?
-        </p>
+        <div dangerouslySetInnerHTML={{ __html: generatedPlan }}></div>
         <button className="py-1 w-full bg-black text-white my-2 font-bold">
           Print My Plan
         </button>

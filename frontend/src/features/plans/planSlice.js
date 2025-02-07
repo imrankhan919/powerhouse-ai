@@ -16,6 +16,7 @@ const planSlice = createSlice({
       return {
         plans: [],
         plan: {},
+        generatedPlan: null,
         isLoading: false,
         isSuccess: false,
         isError: false,
@@ -75,6 +76,23 @@ const planSlice = createSlice({
         state.isSuccess = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(generatePlan.pending, (state, action) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+        state.isError = false;
+      })
+      .addCase(generatePlan.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.generatedPlan = action.payload;
+        state.isError = false;
+      })
+      .addCase(generatePlan.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
       });
   },
 });
@@ -114,6 +132,20 @@ export const createPlan = createAsyncThunk(
     let token = thunkAPI.getState().auth.user.token;
     try {
       return await planService.addPlan(formData, token);
+    } catch (error) {
+      const message = error.response.data.message;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Add Plan
+export const generatePlan = createAsyncThunk(
+  "GENERATE/PLAN",
+  async (userData, thunkAPI) => {
+    let token = thunkAPI.getState().auth.user.token;
+    try {
+      return await planService.generate(userData, token);
     } catch (error) {
       const message = error.response.data.message;
       return thunkAPI.rejectWithValue(message);

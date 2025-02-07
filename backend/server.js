@@ -33,6 +33,9 @@ app.use("/api/plan", require("./routes/plan/planRoutes"));
 // Admin Routes
 app.use("/api/admin", require("./routes/admin/adminRoutes"));
 
+// Ai Routes
+app.use("/api/ai", require("./routes/ai/aiRoute"));
+
 // Error Handler
 app.use(errorHandler);
 

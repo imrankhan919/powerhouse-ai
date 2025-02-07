@@ -38,6 +38,19 @@ const addPlan = async (formData, token) => {
   return response.data;
 };
 
-const planService = { fetchPlans, addPlan, fetchPlan };
+// Generate Plan
+const generate = async (userData, token) => {
+  const options = {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.post("/api/ai/generate-plan", userData, options);
+  console.log(response.data);
+  return response.data.plan;
+};
+
+const planService = { fetchPlans, addPlan, fetchPlan, generate };
 
 export default planService;
