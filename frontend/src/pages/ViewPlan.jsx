@@ -11,27 +11,42 @@ const ViewPlan = () => {
   const { plan, generatedPlan, isLoading, isError, isSuccess, message } =
     useSelector((state) => state.plan);
 
-  const userData = {
-    name: user.name,
-    goal: plan.goal,
-    height: plan.height,
-    weight: plan.weight,
-    prefrence: plan.prefrence,
-  };
-
   const { pid } = useParams();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getPlan(pid));
+  const generateMyPlan = () => {
+    const userData = {
+      name: user.name,
+      goal: plan.goal,
+      height: plan.height,
+      weight: plan.weight,
+      prefrence: plan.prefrence,
+    };
 
-    if (plan && user && isSuccess) {
+    if (isSuccess && userData) {
       dispatch(generatePlan(userData));
     }
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  useEffect(() => {
+    dispatch(getPlan(pid));
   }, [pid]);
 
   if (isLoading) {
-    return <Loading />;
+    console.log("Loading....");
+    return (
+      <div className="w-full my-5 flex items-center justify-center bg-gray-200">
+        <img
+          src="https://assets-v2.lottiefiles.com/a/95ad4f50-428f-11ef-b282-5fa8dbceaeae/QqS0tmRuPD.gif"
+          alt=""
+          className="h-52"
+        />
+      </div>
+    );
   }
 
   return (
@@ -59,8 +74,21 @@ const ViewPlan = () => {
       </div>
 
       <div className="border p-5 my-2">
+        <button
+          onClick={generateMyPlan}
+          className={
+            generatedPlan
+              ? "hidden"
+              : "py-1 w-full bg-blue-400 text-white my-2 font-bold"
+          }
+        >
+          Generate My Ai Plan
+        </button>
         <div dangerouslySetInnerHTML={{ __html: generatedPlan }}></div>
-        <button className="py-1 w-full bg-black text-white my-2 font-bold">
+        <button
+          onClick={handlePrint}
+          className="py-1 w-full bg-black text-white my-2 font-bold"
+        >
           Print My Plan
         </button>
         <button className="py-1 w-full bg-green-500 text-white my-2 font-bold">
