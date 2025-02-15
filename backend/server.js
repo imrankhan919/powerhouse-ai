@@ -3,6 +3,7 @@ require("dotenv").config();
 const colors = require("colors");
 const connectDB = require("./config/db_config");
 const errorHandler = require("./middleware/errorHandler");
+const path = require("path");
 
 const app = express();
 
@@ -18,11 +19,22 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "WELCOME TO POWERHOUSE API 1.0",
+// Deployment
+
+if (process.env.NODE_ENV === "production") {
+  const __dirname = path.resolve();
+  app.use(express.static(path.join(__dirname, "frontend", "dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
-});
+} else {
+  app.get("/", (req, res) => {
+    res.json({
+      message: "WELCOME TO POWERHOUSE API 1.0",
+    });
+  });
+}
 
 // User Routes
 app.use("/api/user", require("./routes/user/userRoutes"));
